@@ -1,0 +1,45 @@
+# -------------------
+# MSVC configuration.
+# -------------------
+
+# Configure msvc (default version, searched for in standard locations and PATH).
+# using msvc ;
+
+# Configure specific msvc version (searched for in standard locations and PATH).
+# EXAMPLE: using msvc : 10.0 : C:\\app\\tools\\MSVisualStudio2010\\VC\\bin\\cl.exe ;
+using msvc : 10.0 : "F:\\Program Files\\Visual Studio 2022\\IDE\\VC\\Tools\\MSVC\\14.32.31326\\bin\\Hostx86\\x86\\cl.exe" ;
+
+
+
+# ---------------------
+# Python configuration.
+# ---------------------
+
+# Configure specific Python version. (default version, searched for in standard locations and PATH).
+# using python : 3.1 : /usr/bin/python3 : /usr/include/python3.1 : /usr/lib ;
+
+using python 
+    : 3.10                  # Version. Note that typing 3.10.5 will cause an error "version requires (major, minor) but got 3.10.5"
+    : "F:\\Program Files (x86)\\Python 3.10.5 x86\\python.exe"      # Python Path
+    : "F:\\Program Files (x86)\\Python 3.10.5 x86\\include"         # include path
+    : "F:\\Program Files (x86)\\Python 3.10.5 x86\\libs"            # lib path(s)
+    : <define>BOOST_ALL_NO_LIB=1                     # Can remove this! Tells the config system not to automatically select which libraries to link against. Normally if a compiler supports #pragma lib, then the correct library build variant will be automatically selected and linked against,simply by the act of including one of that library's headers. This macro turns that feature off.
+;
+
+
+IMPT:  Run b2 stage link=static link=shared --with-python to get BOTH the import (shared, a.k.a. dynamic) libraries which are only referred to from executables, and must be available at run time AND static libraries which means they are included in executable files that use them.
+SOURCES:
+https://www.boost.org/build/doc/html/bbv2/tutorial/linkage.html
+and 
+https://stackoverflow.com/questions/52793803/cannot-open-file-boost-python36-vc141-mt-gd-x64-1-68-lib
+
+IMPT2: When your application uses a dynamically-linked library, a lib file tells you information about what symbols are exported in the dll. So basically you only need the lib to compile & link, but you need the dll to run the program, as it contains all the binary code.
+You say there's an associated dll, which usually indicates the lib file only contains linking info, and no code. You should get a run-time error if the associated dll was not found. You can check with MSVS if a different version of the dll was loaded or if it was loaded from a different place.
+SOURCE: https://stackoverflow.com/questions/12199595/c-what-does-pragma-commentlib-xxx-actually-do-with-xxx#:~:text=That%20pragma%20is%20used%20to,dependencies%20field%20in%20project%20settings.
+
+
+NOTE: According to docs: "On Windows, only ordinary static libraries use the lib prefix; import libraries and DLLs do not." ... "This convention distinguishes the static version of a Boost library from the import library for an identically-configured Boost DLL, which would otherwise have the same name."
+Source: https://stackoverflow.com/questions/41193447/why-is-boost-looking-for-libboost-lib-instead-of-boost-lib
+NOTE2: The .lib files are linked statically, while .dll files are linked dynamically. I believe it's a VC project setting.
+Source: https://stackoverflow.com/questions/2520234/how-to-link-to-dynamic-boost-libs/3051417#3051417
+    

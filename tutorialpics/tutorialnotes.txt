@@ -1,0 +1,10 @@
+0. download latest Windows SDK from here: https://developer.microsoft.com/en-us/windows/downloads/windows-sdk/
+1. change python include & boost include Locations
+2. change Linker python Location (/libs folder)
+3. change Linker python & DirectX .libs filenames to latest versions.
+
+Note The library file (d3dx9.lib) should be in 
+C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x86\ 
+as well as in 
+C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Lib\x64\
+
